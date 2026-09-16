@@ -1,0 +1,137 @@
+/**
+ * 98.css - Standalone Offline Version
+ * Authentic Windows 95/98 Stylesheet without CDN dependencies
+ */
+
+:root {
+  --surface: #c0c0c0;
+  --button-highlight: #ffffff;
+  --button-face: #c0c0c0;
+  --button-shadow: #808080;
+  --window-frame: #0a0a0a;
+  --dialog-blue: #000080;
+  --dialog-blue-light: #1084d0;
+  --dialog-gray: #7f7f7f;
+  --dialog-gray-light: #b5b5b5;
+}
+
+body {
+  font-family: "MS Sans Serif", Arial, sans-serif;
+  font-size: 12px;
+  color: #222;
+  margin: 0;
+  padding: 0;
+}
+
+/* Window frame bevels */
+.window {
+  box-shadow: inset -1px -1px #0a0a0a, inset 1px 1px #dfdfdf, inset -2px -2px grey, inset 2px 2px #fff;
+  background: var(--surface);
+  padding: 3px;
+  box-sizing: border-box;
+}
+
+.title-bar {
+  background: linear-gradient(90deg, var(--dialog-blue), var(--dialog-blue-light));
+  padding: 3px 2px 3px 3px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  user-select: none;
+}
+
+.title-bar.inactive {
+  background: linear-gradient(90deg, var(--dialog-gray), var(--dialog-gray-light));
+}
+
+.title-bar-text {
+  color: #fff;
+  font-weight: bold;
+  letter-spacing: 0;
+  margin-right: 24px;
+}
+
+.title-bar-controls {
+  display: flex;
+}
+
+.title-bar-controls button {
+  padding: 0;
+  display: block;
+  min-width: 16px;
+  min-height: 14px;
+}
+
+.title-bar-controls button[aria-label="Minimize"] {
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg width='6' height='2' viewBox='0 0 6 2' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill='%23000' d='M0 0h6v2H0z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: bottom 3px left 4px;
+}
+
+.title-bar-controls button[aria-label="Maximize"] {
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg width='9' height='9' viewBox='0 0 9 9' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M9 0H0v9h9V0zM8 2H1v6h7V2z' fill='%23000'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: top 2px left 3px;
+}
+
+.title-bar-controls button[aria-label="Restore"] {
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg width='8' height='9' viewBox='0 0 8 9' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M2 0h6v6H5v3H0V3h2V0zm5 2H4v1h3V2zM1 5h3v3H1V5z' fill='%23000'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: top 2px left 3px;
+}
+
+.title-bar-controls button[aria-label="Close"] {
+  margin-left: 2px;
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg width='8' height='7' viewBox='0 0 8 7' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M0 0h2v1h1v1h2V1h1V0h2v1H7v1H6v1H5v1h1v1h1v1h1v1H6V6H5V5H3v1H2v1H0V6h1V5h1V4h1V3H2V2H1V1H0V0z' fill='%23000'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: top 3px left 4px;
+}
+
+.window-body {
+  margin: 8px;
+}
+
+/* Sunken Panels / Inset Box */
+.sunken-panel {
+  box-shadow: inset -1px -1px #fff, inset 1px 1px grey, inset -2px -2px #dfdfdf, inset 2px 2px #0a0a0a;
+  background: #fff;
+  box-sizing: border-box;
+}
+
+/* Buttons */
+button {
+  box-sizing: border-box;
+  border: none;
+  background: var(--surface);
+  box-shadow: inset -1px -1px #0a0a0a, inset 1px 1px #fff, inset -2px -2px grey, inset 2px 2px #dfdfdf;
+  border-radius: 0;
+  min-width: 75px;
+  min-height: 23px;
+  padding: 0 12px;
+  font-family: inherit;
+  font-size: 11px;
+}
+
+button:focus {
+  outline: 1px dotted #000;
+  outline-offset: -4px;
+}
+
+button:active {
+  box-shadow: inset -1px -1px #fff, inset 1px 1px #0a0a0a, inset -2px -2px #dfdfdf, inset 2px 2px grey;
+  padding: 2px 11px 0 13px;
+}
+
+/* Status Bar */
+.status-bar {
+  margin: 0 1px;
+  display: flex;
+  gap: 1px;
+}
+
+.status-bar-field {
+  box-shadow: inset -1px -1px #dfdfdf, inset 1px 1px grey;
+  flex-grow: 1;
+  padding: 2px 3px;
+  margin: 0;
+}

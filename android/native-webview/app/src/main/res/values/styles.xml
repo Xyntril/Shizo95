@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.Shizo95" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">#008080</item>
+        <item name="colorPrimaryDark">#008080</item>
+        <item name="android:statusBarColor">#008080</item>
+    </style>
+    <style name="Theme.Shizo95.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:statusBarColor">#008080</item>
+    </style>
+</resources>

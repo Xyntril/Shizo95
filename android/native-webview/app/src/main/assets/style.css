@@ -1,0 +1,439 @@
+/* ==========================================================================
+   Шизо 95: Клинический синтезатор
+   Стилизация Windows 95 + EarthBound Canvas + 8-Direction Resizing & Dragging
+   ========================================================================== */
+
+/* Встроенный пиксельный шрифт Galmuri9 (Latin + Cyrillic + Hangul) */
+@font-face {
+  font-family: 'Galmuri9';
+  src: url('Galmuri9.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --w95-bg: #c0c0c0;
+  --w95-bg-translucent: rgba(192, 192, 192, 0.82);
+  --w95-title-active: #000080;
+  --w95-title-active-gradient: #1084d0;
+  --w95-title-text: #ffffff;
+  --w95-border-light: #ffffff;
+  --w95-border-dark: #808080;
+  --w95-border-darkest: #000000;
+  --w95-sunken-bg: #ffffff;
+  --w95-sunken-translucent: rgba(255, 255, 255, 0.85);
+  --w95-text: #000000;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-user-select: none;
+  user-select: none;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+html, body {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background-color: #060612;
+  font-family: 'Galmuri9', 'Fixedsys', 'MS Sans Serif', 'Courier New', monospace;
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--w95-text);
+  -webkit-font-smoothing: none;
+  font-smooth: never;
+}
+
+/* ==========================================================================
+   Полноэкранный волновой холст EarthBound
+   ========================================================================== */
+#earthbound-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1;
+  display: block;
+}
+
+/* Мягкая кинескопная ретро-сканлайн сетка */
+.scanline-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 2;
+  background: linear-gradient(
+    rgba(12, 12, 28, 0) 50%,
+    rgba(0, 0, 0, 0.18) 50%
+  );
+  background-size: 100% 4px;
+}
+
+/* ==========================================================================
+   Рабочая среда и плавающее окно Win95
+   ========================================================================== */
+.desktop-viewport {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 10;
+  overflow: hidden;
+  pointer-events: none; /* Клики сквозь пустое пространство */
+}
+
+.window {
+  position: absolute;
+  pointer-events: auto;
+  min-width: 290px;
+  min-height: 170px;
+  background-color: var(--w95-bg);
+  padding: 3px;
+  box-shadow:
+    inset -1px -1px var(--w95-border-darkest),
+    inset 1px 1px var(--w95-border-light),
+    inset -2px -2px var(--w95-border-dark),
+    inset 2px 2px var(--w95-bg),
+    4px 6px 28px rgba(0, 0, 0, 0.82);
+  display: flex;
+  flex-direction: column;
+  touch-action: none;
+}
+
+/* Режим ретро-полупрозрачности (Ghost Mode) */
+.window.translucent {
+  background-color: var(--w95-bg-translucent);
+  backdrop-filter: blur(2px);
+  background-image: radial-gradient(rgba(0, 0, 0, 0.12) 20%, transparent 20%);
+  background-size: 3px 3px;
+}
+
+.window.translucent .sunken-panel {
+  background-color: var(--w95-sunken-translucent);
+}
+
+/* Состояние схлопывания в плашку заголовка (Roll-up / Window Shade) */
+.window.rolled-up {
+  height: auto !important;
+  min-height: auto !important;
+}
+
+.window.rolled-up .window-body {
+  display: none !important;
+}
+
+/* Полноэкранный режим разворачивания (Maximized) */
+.window.maximized {
+  top: 4px !important;
+  left: 4px !important;
+  width: calc(100vw - 8px) !important;
+  height: calc(100vh - 8px) !important;
+}
+
+.window.maximized .resize-handle {
+  display: none !important;
+}
+
+/* ==========================================================================
+   Шапка окна (Title Bar & Drag Handle)
+   ========================================================================== */
+.title-bar {
+  background: linear-gradient(90deg, var(--w95-title-active), var(--w95-title-active-gradient));
+  padding: 3px 4px 3px 6px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--w95-title-text);
+  font-weight: bold;
+  letter-spacing: 0.5px;
+  font-size: 12px;
+  min-height: 24px;
+  cursor: move;
+  touch-action: none;
+}
+
+.title-bar-text {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.win-icon {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+.title-bar-controls {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  cursor: default;
+}
+
+.title-btn {
+  width: 18px;
+  height: 16px;
+  background: var(--w95-bg);
+  border: none;
+  font-family: 'Galmuri9', monospace;
+  font-size: 10px;
+  font-weight: bold;
+  line-height: 11px;
+  text-align: center;
+  box-shadow:
+    inset -1px -1px var(--w95-border-darkest),
+    inset 1px 1px var(--w95-border-light),
+    inset -2px -2px var(--w95-border-dark);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #000000;
+  touch-action: auto;
+}
+
+.title-btn:hover {
+  background: #d4d0c8;
+}
+
+.title-btn:active,
+.title-btn.active-toggle {
+  box-shadow:
+    inset 1px 1px var(--w95-border-darkest),
+    inset -1px -1px var(--w95-border-light),
+    inset 2px 2px var(--w95-border-dark);
+  padding-top: 1px;
+  padding-left: 1px;
+}
+
+.title-btn.active-toggle {
+  background: #a4a098;
+}
+
+/* ==========================================================================
+   Тело окна (Window Body)
+   ========================================================================== */
+.window-body {
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+  min-height: 0;
+}
+
+.field-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.label-win95 {
+  font-size: 11px;
+  white-space: nowrap;
+  color: #000000;
+  font-weight: bold;
+}
+
+.select-win95 {
+  flex: 1;
+  background: #ffffff;
+  padding: 3px 6px;
+  border: none;
+  font-family: inherit;
+  font-size: 11px;
+  box-shadow:
+    inset 1px 1px var(--w95-border-darkest),
+    inset -1px -1px var(--w95-border-light),
+    inset 2px 2px var(--w95-border-dark);
+  outline: none;
+  cursor: pointer;
+}
+
+/* Вдавленная панель вывода цитаты */
+.sunken-panel {
+  flex: 1;
+  min-height: 100px;
+  background: var(--w95-sunken-bg);
+  padding: 8px 10px;
+  overflow-y: auto;
+  box-shadow:
+    inset 1px 1px var(--w95-border-darkest),
+    inset -1px -1px var(--w95-border-light),
+    inset 2px 2px var(--w95-border-dark);
+}
+
+.quote-content {
+  font-size: 12px;
+  line-height: 1.5;
+  color: #000000;
+  -webkit-user-select: text;
+  user-select: text;
+  word-break: break-word;
+  white-space: pre-wrap;
+}
+
+/* ==========================================================================
+   Кнопки действий
+   ========================================================================== */
+.button-row {
+  display: flex;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+.btn-win95 {
+  background: var(--w95-bg);
+  border: none;
+  padding: 4px 12px;
+  font-family: inherit;
+  font-size: 11px;
+  cursor: pointer;
+  outline: none;
+  box-shadow:
+    inset -1px -1px var(--w95-border-darkest),
+    inset 1px 1px var(--w95-border-light),
+    inset -2px -2px var(--w95-border-dark);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.btn-win95:focus {
+  outline: 1px dotted #000000;
+  outline-offset: -3px;
+}
+
+.btn-win95:active {
+  box-shadow:
+    inset 1px 1px var(--w95-border-darkest),
+    inset -1px -1px var(--w95-border-light),
+    inset 2px 2px var(--w95-border-dark);
+  padding: 5px 11px 3px 13px;
+}
+
+.btn-primary {
+  min-width: 125px;
+  font-weight: bold;
+}
+
+/* ==========================================================================
+   Строка состояния (Status Bar)
+   ========================================================================== */
+.status-bar {
+  display: flex;
+  gap: 2px;
+  padding-top: 2px;
+}
+
+.status-bar-field {
+  flex: 1;
+  background: var(--w95-bg);
+  padding: 2px 6px;
+  font-size: 10px;
+  box-shadow:
+    inset 1px 1px var(--w95-border-dark),
+    inset -1px -1px var(--w95-border-light);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ==========================================================================
+   Всплывающее уведомление (Toast)
+   ========================================================================== */
+.toast {
+  position: absolute;
+  bottom: 38px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #ffffe1;
+  color: #000000;
+  padding: 4px 10px;
+  font-size: 11px;
+  border: 1px solid #000000;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  transition: opacity 0.15s ease-in-out;
+  pointer-events: none;
+  z-index: 100;
+  white-space: nowrap;
+}
+
+.toast.visible {
+  opacity: 1;
+}
+
+/* ==========================================================================
+   Интерактивные ручки масштабирования (8 направлений с системными курсорами)
+   ========================================================================== */
+.resize-handle {
+  position: absolute;
+  z-index: 60;
+  touch-action: none;
+}
+
+.resize-n  { top: -4px; left: 8px; right: 8px; height: 8px; cursor: ns-resize; }
+.resize-s  { bottom: -4px; left: 8px; right: 8px; height: 8px; cursor: ns-resize; }
+.resize-w  { left: -4px; top: 8px; bottom: 8px; width: 8px; cursor: ew-resize; }
+.resize-e  { right: -4px; top: 8px; bottom: 8px; width: 8px; cursor: ew-resize; }
+.resize-nw { top: -4px; left: -4px; width: 14px; height: 14px; cursor: nwse-resize; }
+.resize-ne { top: -4px; right: -4px; width: 14px; height: 14px; cursor: nesw-resize; }
+.resize-sw { bottom: -4px; left: -4px; width: 14px; height: 14px; cursor: nesw-resize; }
+.resize-se { bottom: -4px; right: -4px; width: 14px; height: 14px; cursor: nwse-resize; }
+
+/* ==========================================================================
+   Стилизация аутентичных скроллбаров Windows 95
+   ========================================================================== */
+::-webkit-scrollbar {
+  width: 14px;
+  height: 14px;
+  background: #dfdfdf;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--w95-bg);
+  box-shadow:
+    inset -1px -1px var(--w95-border-darkest),
+    inset 1px 1px var(--w95-border-light),
+    inset -2px -2px var(--w95-border-dark);
+}
+
+::-webkit-scrollbar-thumb:active {
+  box-shadow:
+    inset 1px 1px var(--w95-border-darkest),
+    inset -1px -1px var(--w95-border-light),
+    inset 2px 2px var(--w95-border-dark);
+}
+
+/* ==========================================================================
+   Адаптивность для мобильных устройств (Android)
+   ========================================================================== */
+@media (max-width: 480px) {
+  .status-bar {
+    flex-direction: column;
+    gap: 1px;
+  }
+  .button-row {
+    flex-direction: column-reverse;
+  }
+  .btn-win95 {
+    width: 100%;
+  }
+}

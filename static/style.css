@@ -1,0 +1,279 @@
+/* Windows 95 Aesthetic Custom Overrides */
+:root {
+  --win-desktop-bg: #008080;
+  --win-gray: #c0c0c0;
+  --win-dark-gray: #808080;
+  --win-light-gray: #dfdfdf;
+  --win-dark-blue: #000080;
+  --win-yellow: #ffff00;
+}
+
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: var(--win-desktop-bg);
+  font-family: "MS Sans Serif", "VT323", Tahoma, Arial, sans-serif;
+  user-select: none;
+}
+
+/* Desktop container */
+.desktop-screen {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  padding: 12px;
+  background-color: var(--win-desktop-bg);
+  /* Classic Win95 subtle dither pattern */
+  background-image: radial-gradient(rgba(0, 0, 0, 0.15) 1px, transparent 0);
+  background-size: 4px 4px;
+}
+
+/* Main Dialog Window */
+.win95-dialog {
+  width: 100%;
+  max-width: 480px;
+  min-height: 290px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+}
+
+.title-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 3px 4px;
+  background: linear-gradient(90deg, #000080, #1084d0);
+  color: #ffffff;
+  font-weight: bold;
+  font-size: 13px;
+  letter-spacing: 0.5px;
+}
+
+.title-bar-text {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.win-icon {
+  flex-shrink: 0;
+}
+
+/* Dialog Body */
+.window-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  margin: 10px;
+  gap: 12px;
+}
+
+.dialog-content {
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+/* Pixel Retro Warning Icon */
+.pixel-icon-container {
+  flex-shrink: 0;
+  padding-top: 4px;
+}
+
+.pixel-warning-icon {
+  width: 38px;
+  height: 38px;
+  background-color: var(--win-yellow);
+  border: 3px solid #000000;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 2px 2px 0px #808080;
+  position: relative;
+  animation: pulse-icon 4s infinite ease-in-out;
+}
+
+@keyframes pulse-icon {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+.pixel-exclamation {
+  font-family: "Courier New", monospace;
+  font-weight: 900;
+  font-size: 26px;
+  color: #000000;
+  line-height: 1;
+}
+
+/* Quote Area */
+.quote-wrapper {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+
+.category-tag {
+  font-size: 11px;
+  color: #444;
+  margin-bottom: 4px;
+  font-weight: bold;
+  letter-spacing: 0.2px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.quote-display {
+  background: #ffffff;
+  min-height: 110px;
+  max-height: 160px;
+  overflow-y: auto;
+  padding: 10px 12px;
+  font-size: 15px;
+  line-height: 1.4;
+  color: #000000;
+  user-select: text;
+  word-break: break-word;
+  transition: opacity 0.15s ease-in-out;
+}
+
+/* Retro scrollbar inside sunken panel */
+.quote-display::-webkit-scrollbar {
+  width: 16px;
+}
+
+.quote-display::-webkit-scrollbar-track {
+  background: #dfdfdf;
+  border-left: 1px solid #808080;
+}
+
+.quote-display::-webkit-scrollbar-thumb {
+  background: #c0c0c0;
+  border: 2px solid;
+  border-color: #ffffff #808080 #808080 #ffffff;
+}
+
+.quote-display p {
+  margin: 0;
+  font-family: "MS Sans Serif", Tahoma, sans-serif;
+  font-size: 14px;
+}
+
+/* Flicker animation on generate */
+.flicker {
+  animation: crt-flicker 0.25s linear;
+}
+
+@keyframes crt-flicker {
+  0% { opacity: 0.2; transform: translateY(-1px); }
+  35% { opacity: 0.9; transform: translateY(1px); }
+  65% { opacity: 0.4; }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+/* Toast Message */
+.system-status-toast {
+  min-height: 18px;
+  font-size: 11px;
+  color: #000080;
+  font-weight: bold;
+  text-align: center;
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.system-status-toast.visible {
+  opacity: 1;
+}
+
+/* Controls Area */
+.controls-area {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.win-btn {
+  min-width: 100px;
+  height: 28px;
+  font-size: 12px;
+  font-family: inherit;
+  font-weight: bold;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  cursor: pointer;
+}
+
+.win-btn:active {
+  padding-top: 2px;
+}
+
+.primary-btn {
+  outline: 1px dotted #000000;
+  outline-offset: -4px;
+}
+
+.btn-icon {
+  font-size: 13px;
+}
+
+/* Status Bar */
+.status-bar {
+  margin: 0 3px 3px 3px;
+  font-size: 11px;
+}
+
+.status-bar-field {
+  padding: 2px 6px;
+  margin: 0;
+}
+
+/* Mobile optimizations */
+@media (max-width: 480px) {
+  .desktop-screen {
+    padding: 8px;
+  }
+
+  .win95-dialog {
+    max-height: 96vh;
+  }
+
+  .controls-area {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 6px;
+  }
+
+  .win-btn {
+    min-width: 0;
+    padding: 2px 4px;
+    font-size: 11px;
+  }
+
+  .quote-display {
+    min-height: 100px;
+    max-height: 140px;
+    font-size: 13px;
+  }
+}

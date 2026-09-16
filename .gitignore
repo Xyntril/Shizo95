@@ -1,0 +1,22 @@
+# Сборки и бинарники
+*.AppImage
+*.apk
+*.exe
+*.zip
+*.spec
+dist/
+build/
+
+# Android и SDK
+android/sdk/
+android/build_tools/
+.gradle/
+android/**/.gradle/
+android/**/build/
+
+# Среда и кэш
+.env
+.idea/
+linux/build_tmp/
+__pycache__/
+*.pyc

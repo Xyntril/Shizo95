@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Шизо_95.exe - Критическая глубина мысли</title>
+
+  <!-- Telegram WebApp SDK -->
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+  <!-- 98.css Authentic Windows 95/98 Stylesheet -->
+  <link rel="stylesheet" href="https://unpkg.com/98.css">
+
+  <!-- Google Fonts VT323 & Press Start 2P for extra retro flavor -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+
+  <!-- Custom Retro Styles -->
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <div class="desktop-screen">
+    <!-- Main Windows 95 Dialog Window -->
+    <div class="window win95-dialog" id="main-window">
+      <!-- Title Bar -->
+      <div class="title-bar">
+        <div class="title-bar-text">
+          <svg class="win-icon" viewBox="0 0 16 16" width="16" height="16" fill="currentColor">
+            <rect x="1" y="1" width="14" height="14" fill="#000080" />
+            <rect x="3" y="3" width="10" height="10" fill="#FFFF00" />
+            <rect x="7" y="5" width="2" height="4" fill="#000" />
+            <rect x="7" y="10" width="2" height="2" fill="#000" />
+          </svg>
+          <span>Шизо_95.exe - Критическая глубина мысли</span>
+        </div>
+        <div class="title-bar-controls">
+          <button aria-label="Minimize" id="btn-minimize"></button>
+          <button aria-label="Maximize" id="btn-maximize"></button>
+          <button aria-label="Close" id="btn-close"></button>
+        </div>
+      </div>
+
+      <!-- Window Content -->
+      <div class="window-body">
+        <div class="dialog-content">
+          <!-- Retro Pixel Icon (Warning / Error) -->
+          <div class="pixel-icon-container" title="Критическое исключение реальности">
+            <div class="pixel-warning-icon">
+              <span class="pixel-exclamation">!</span>
+            </div>
+          </div>
+
+          <!-- Main Text Box with Retro Scrollbar -->
+          <div class="quote-wrapper">
+            <div class="category-tag" id="quote-category">Категория: Инициализация ядра...</div>
+            <div class="sunken-panel quote-display" id="quote-box" tabindex="0">
+              <p id="quote-text">Загрузка операционной шизосистемы...</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- System Message / Toast notification area -->
+        <div class="system-status-toast" id="toast-msg"></div>
+
+        <!-- Dialog Control Buttons -->
+        <div class="controls-area">
+          <button class="win-btn primary-btn" id="btn-generate">
+            <span class="btn-icon">⚡</span> Сгенерировать
+          </button>
+          <button class="win-btn" id="btn-copy">
+            <span class="btn-icon">📋</span> Скопировать
+          </button>
+          <button class="win-btn send-chat-btn" id="btn-send-chat">
+            <span class="btn-icon">💬</span> В чат
+          </button>
+        </div>
+      </div>
+
+      <!-- Win95 Status Bar -->
+      <div class="status-bar">
+        <p class="status-bar-field" id="status-ready">Готово</p>
+        <p class="status-bar-field" id="status-counter">Цитата #1</p>
+        <p class="status-bar-field">ОЗУ: 640 КБ</p>
+      </div>
+    </div>
+  </div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Шизо 95
+Comment=Генератор абсурдных ретро-цитат в стиле Windows 95
+Exec=shizo95
+Icon=shizo95
+Categories=Utility;Amusement;
+Terminal=false
+StartupWMClass=Шизо 95 (Версия 4.00.950)

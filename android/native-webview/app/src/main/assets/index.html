@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Шизо 95: Клинический синтезатор</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Полноэкранный волновой ретро-холст EarthBound (Photosensitive Safe) -->
+  <canvas id="earthbound-canvas"></canvas>
+  <div class="scanline-overlay"></div>
+
+  <!-- Рабочая область с плавающим окном Windows 95 -->
+  <div class="desktop-viewport" id="desktop-viewport">
+    
+    <div class="window" id="win95-window" role="dialog" aria-labelledby="dialog-title">
+      
+      <!-- Интерактивные границы и углы для растягивания (8 направлений с системными курсорами) -->
+      <div class="resize-handle resize-n" data-dir="n"></div>
+      <div class="resize-handle resize-s" data-dir="s"></div>
+      <div class="resize-handle resize-w" data-dir="w"></div>
+      <div class="resize-handle resize-e" data-dir="e"></div>
+      <div class="resize-handle resize-nw" data-dir="nw"></div>
+      <div class="resize-handle resize-ne" data-dir="ne"></div>
+      <div class="resize-handle resize-sw" data-dir="sw"></div>
+      <div class="resize-handle resize-se" data-dir="se"></div>
+
+      <!-- Шапка окна (Title Bar & Drag Handle) -->
+      <div class="title-bar" id="window-title-bar">
+        <div class="title-bar-text">
+          <svg class="win-icon" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="16" height="16" fill="#C0C0C0"/>
+            <rect x="1" y="1" width="14" height="14" fill="#000080"/>
+            <rect x="3" y="3" width="4" height="4" fill="#FF0000"/>
+            <rect x="9" y="3" width="4" height="4" fill="#00FF00"/>
+            <rect x="3" y="9" width="4" height="4" fill="#00FFFF"/>
+            <rect x="9" y="9" width="4" height="4" fill="#FFFF00"/>
+          </svg>
+          <span id="dialog-title">Шизо_95.exe — Клинический синтезатор</span>
+        </div>
+
+        <div class="title-bar-controls">
+          <!-- Тумблер лёгкой ретро-полупрозрачности окна (Ghost mode) -->
+          <button class="title-btn" id="btn-ghost" title="Тумблер прозрачности окна (Ghost Mode)" aria-label="Прозрачность">░</button>
+          <!-- Свернуть в компактную плашку заголовка (Roll-up) -->
+          <button class="title-btn" id="btn-minimize" title="Свернуть в плашку" aria-label="Свернуть">_</button>
+          <!-- Развернуть / Восстановить размер -->
+          <button class="title-btn" id="btn-maximize" title="Развернуть/Восстановить" aria-label="Развернуть">□</button>
+          <!-- Закрыть процесс -->
+          <button class="title-btn" id="btn-close" title="Закрыть" aria-label="Закрыть">✕</button>
+        </div>
+      </div>
+
+      <!-- Тело окна Windows 95 -->
+      <div class="window-body" id="window-body">
+        
+        <!-- Селектор клинического профиля бреда -->
+        <div class="field-row">
+          <label class="label-win95" for="profile-select">Профиль:</label>
+          <select id="profile-select" class="select-win95">
+            <option value="0">1. Атаксическая инкогеренция (Word Salad)</option>
+            <option value="1">2. Параноидный неологизм / Технопсихоз</option>
+            <option value="2">3. Ритуальная латинская вербигерация</option>
+            <option value="3">4. Олигофазический бытовой сюрреализм</option>
+          </select>
+        </div>
+
+        <!-- Вдавленное текстовое поле вывода (Sunken Panel) -->
+        <div class="sunken-panel" id="quote-box" tabindex="0" role="region" aria-label="Синтезированная мыслеформа">
+          <p class="quote-content" id="quote-text">Инициализация клинического генератора шизофазии...</p>
+        </div>
+
+        <!-- Кнопки управления -->
+        <div class="button-row">
+          <button class="btn-win95" id="btn-copy">
+            <span>📋</span> Скопировать
+          </button>
+          <button class="btn-win95 btn-primary" id="btn-synthesize">
+            <span>⚡</span> Ресинтез мысли
+          </button>
+        </div>
+
+        <!-- Строка состояния (Status Bar) -->
+        <footer class="status-bar">
+          <div class="status-bar-field" id="status-entropy" title="Информационная энтропия Шеннона">H(S): 0.00 бит</div>
+          <div class="status-bar-field" id="status-coherence" title="Клиническая когерентность мышления">Когерентность: 11.4%</div>
+          <div class="status-bar-field" id="status-freq" title="Частота волны EarthBound">Волна: 0.14 Гц</div>
+        </footer>
+
+      </div>
+
+      <!-- Всплывающее уведомление (Win95 Tooltip Toast) -->
+      <div class="toast" id="toast-msg"></div>
+
+    </div>
+  </div>
+
+  <script src="engine.js"></script>
+</body>
+</html>

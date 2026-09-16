@@ -1,0 +1,17 @@
+{
+  "name": "shizo95-capacitor",
+  "version": "1.0.0",
+  "description": "Шизо 95 — Генератор абсурдных ретро-цитат в стиле Windows 95",
+  "scripts": {
+    "cap:add": "cap add android",
+    "cap:sync": "cap sync android",
+    "cap:open": "cap open android",
+    "build:debug": "cd android && ./gradlew assembleDebug",
+    "build:release": "cd android && ./gradlew assembleRelease"
+  },
+  "dependencies": {
+    "@capacitor/android": "^6.0.0",
+    "@capacitor/cli": "^6.0.0",
+    "@capacitor/core": "^6.0.0"
+  }
+}
