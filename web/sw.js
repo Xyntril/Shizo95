@@ -1,9 +1,11 @@
-const CACHE_NAME = 'shizo95-v1';
+const CACHE_NAME = 'shizo95-v2';
 const ASSETS = [
   './',
   './index.html',
+  './98.css',
   './style.css',
   './engine.js',
+  './quotes.json',
   './Galmuri9.woff2',
   './manifest.json',
   './icon-192.png',

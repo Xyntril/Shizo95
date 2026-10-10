@@ -1,6 +1,6 @@
 /* ==========================================================================
    Шизо 95: Клинический синтезатор
-   Стилизация Windows 95 + EarthBound Canvas + 8-Direction Resizing & Dragging
+   Каноничная стилизация Windows 95 / 98 (Offline 98.css + Retro UI)
    ========================================================================== */
 
 /* Встроенный пиксельный шрифт Galmuri9 (Latin + Cyrillic + Hangul) */
@@ -14,16 +14,15 @@
 
 :root {
   --w95-bg: #c0c0c0;
-  --w95-bg-translucent: rgba(192, 192, 192, 0.82);
+  --surface: #c0c0c0;
   --w95-title-active: #000080;
   --w95-title-active-gradient: #1084d0;
-  --w95-title-text: #ffffff;
-  --w95-border-light: #ffffff;
-  --w95-border-dark: #808080;
-  --w95-border-darkest: #000000;
-  --w95-sunken-bg: #ffffff;
-  --w95-sunken-translucent: rgba(255, 255, 255, 0.85);
   --w95-text: #000000;
+  --dialog-blue: #000080;
+  --dialog-blue-light: #1084d0;
+  --dialog-gray: #7f7f7f;
+  --dialog-gray-light: #b5b5b5;
+  --taskbar-height: 28px;
 }
 
 * {
@@ -41,7 +40,7 @@ html, body {
   height: 100vh;
   overflow: hidden;
   background-color: #060612;
-  font-family: 'Galmuri9', 'Fixedsys', 'MS Sans Serif', 'Courier New', monospace;
+  font-family: 'Galmuri9', 'MS Sans Serif', monospace;
   font-size: 13px;
   line-height: 1.4;
   color: var(--w95-text);
@@ -50,7 +49,36 @@ html, body {
 }
 
 /* ==========================================================================
-   Полноэкранный волновой холст EarthBound
+   КРИТИЧЕСКИЙ ФИКС ШРИФТА: ЗАПРЕТ СИНТЕТИЧЕСКОГО BOLD
+   У Galmuri9 нет жирного начертания; убираем расплывание и слипание глифов
+   ========================================================================== */
+.clippy-bubble,
+.clippy-bubble-text,
+.clippy-bubble-header,
+.clippy-bubble-title,
+.clippy-opt-btn,
+.window-body,
+.quote-content,
+p,
+button,
+.btn-win95,
+.win-btn,
+.status-bar,
+.status-bar-field,
+.psychosis-panel legend,
+.psychosis-scale,
+.psychosis-badge,
+.label-win95,
+.defrag-drive-title,
+.defrag-status-text,
+.legend-text,
+.menu-item,
+.menu-dropdown-item {
+  font-weight: normal !important;
+}
+
+/* ==========================================================================
+   Фоновый холст: EarthBound Canvas + Scanline Overlay
    ========================================================================== */
 #earthbound-canvas {
   position: fixed;
@@ -60,116 +88,150 @@ html, body {
   height: 100vh;
   z-index: 1;
   display: block;
+  pointer-events: none;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
 }
 
-/* Мягкая кинескопная ретро-сканлайн сетка */
 .scanline-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  pointer-events: none;
   z-index: 2;
+  pointer-events: none;
   background: linear-gradient(
-    rgba(12, 12, 28, 0) 50%,
-    rgba(0, 0, 0, 0.18) 50%
+    rgba(16, 16, 24, 0) 50%,
+    rgba(0, 0, 0, 0.22) 50%
   );
-  background-size: 100% 4px;
+  background-size: 100% 3px;
 }
 
 /* ==========================================================================
-   Рабочая среда и плавающее окно Win95
+   Рабочая область (Desktop Viewport)
    ========================================================================== */
 .desktop-viewport {
   position: absolute;
   top: 0;
   left: 0;
   width: 100vw;
-  height: 100vh;
+  height: calc(100vh - var(--taskbar-height));
   z-index: 10;
   overflow: hidden;
-  pointer-events: none; /* Клики сквозь пустое пространство */
 }
 
-.window {
+/* Иконки рабочего стола */
+.desktop-icons {
   position: absolute;
-  pointer-events: auto;
-  min-width: 290px;
-  min-height: 170px;
-  background-color: var(--w95-bg);
-  padding: 3px;
-  box-shadow:
-    inset -1px -1px var(--w95-border-darkest),
-    inset 1px 1px var(--w95-border-light),
-    inset -2px -2px var(--w95-border-dark),
-    inset 2px 2px var(--w95-bg),
-    4px 6px 28px rgba(0, 0, 0, 0.82);
+  top: 14px;
+  left: 14px;
   display: flex;
   flex-direction: column;
-  touch-action: none;
+  gap: 16px;
+  z-index: 12;
 }
 
-/* Режим ретро-полупрозрачности (Ghost Mode) */
-.window.translucent {
-  background-color: var(--w95-bg-translucent);
-  backdrop-filter: blur(2px);
-  background-image: radial-gradient(rgba(0, 0, 0, 0.12) 20%, transparent 20%);
-  background-size: 3px 3px;
+.desktop-icon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 76px;
+  padding: 4px 2px;
+  cursor: pointer;
+  text-align: center;
+  border: 1px dotted transparent;
 }
 
-.window.translucent .sunken-panel {
-  background-color: var(--w95-sunken-translucent);
+.desktop-icon:hover {
+  background-color: rgba(0, 0, 128, 0.28);
 }
 
-/* Состояние схлопывания в плашку заголовка (Roll-up / Window Shade) */
-.window.rolled-up {
-  height: auto !important;
-  min-height: auto !important;
+.desktop-icon:focus, .desktop-icon.selected {
+  outline: 1px dotted #ffff00;
+  background-color: rgba(0, 0, 128, 0.45);
 }
 
-.window.rolled-up .window-body {
-  display: none !important;
+.icon-graphic {
+  width: 32px;
+  height: 32px;
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-/* Полноэкранный режим разворачивания (Maximized) */
-.window.maximized {
-  top: 4px !important;
-  left: 4px !important;
-  width: calc(100vw - 8px) !important;
-  height: calc(100vh - 8px) !important;
-}
-
-.window.maximized .resize-handle {
-  display: none !important;
+.icon-label {
+  color: #ffffff;
+  font-size: 12px;
+  line-height: 1.2;
+  text-shadow: 1px 1px 1px #000000;
+  word-break: break-word;
 }
 
 /* ==========================================================================
-   Шапка окна (Title Bar & Drag Handle)
+   Окна Windows 95/98 (.window)
    ========================================================================== */
-.title-bar {
-  background: linear-gradient(90deg, var(--w95-title-active), var(--w95-title-active-gradient));
-  padding: 3px 4px 3px 6px;
+.window {
+  box-shadow: inset -1px -1px #0a0a0a, inset 1px 1px #dfdfdf, inset -2px -2px grey, inset 2px 2px #fff !important;
+  background: var(--surface) !important;
+  padding: 3px;
+  box-sizing: border-box;
+  position: absolute;
+  min-width: 480px !important;
+  min-height: 380px !important;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  color: var(--w95-title-text);
-  font-weight: bold;
-  letter-spacing: 0.5px;
-  font-size: 12px;
-  min-height: 24px;
-  cursor: move;
+  flex-direction: column;
   touch-action: none;
+  z-index: 20;
+}
+
+.window.active-window {
+  z-index: 30;
+}
+
+/* Анимация сотрясения окна при попытке закрыть защищенный процесс */
+.window.shake {
+  animation: winShake 0.35s ease;
+}
+
+@keyframes winShake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-6px); }
+  40%, 80% { transform: translateX(6px); }
+}
+
+/* Заголовок окна (.title-bar) с каноничным градиентом Win98 */
+.title-bar {
+  background: linear-gradient(90deg, #000080 0%, #1084d0 100%) !important;
+  padding: 3px 2px 3px 3px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  user-select: none;
+  cursor: grab;
+  min-height: 18px;
+}
+
+.title-bar:active {
+  cursor: grabbing;
+}
+
+.window:not(.active-window) .title-bar {
+  background: linear-gradient(90deg, #7f7f7f 0%, #b5b5b5 100%) !important;
 }
 
 .title-bar-text {
+  color: #ffffff;
+  letter-spacing: 0;
+  margin-right: 12px;
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 5px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  pointer-events: none;
+  font-size: 12px;
 }
 
 .win-icon {
@@ -178,65 +240,190 @@ html, body {
   flex-shrink: 0;
 }
 
+/* Кнопки управления окном (.title-bar-controls) */
 .title-bar-controls {
   display: flex;
   align-items: center;
   gap: 2px;
-  cursor: default;
+  flex-shrink: 0;
 }
 
-.title-btn {
-  width: 18px;
-  height: 16px;
-  background: var(--w95-bg);
+.title-bar-controls button {
+  box-sizing: border-box;
   border: none;
-  font-family: 'Galmuri9', monospace;
-  font-size: 10px;
-  font-weight: bold;
-  line-height: 11px;
-  text-align: center;
-  box-shadow:
-    inset -1px -1px var(--w95-border-darkest),
-    inset 1px 1px var(--w95-border-light),
-    inset -2px -2px var(--w95-border-dark);
+  background: var(--surface);
+  box-shadow: inset -1px -1px #0a0a0a, inset 1px 1px #fff, inset -2px -2px grey, inset 2px 2px #dfdfdf;
+  border-radius: 0;
+  min-width: 16px !important;
+  min-height: 14px !important;
+  width: 16px;
+  height: 14px;
+  padding: 0;
+  display: block;
   cursor: pointer;
-  display: flex;
+}
+
+.title-bar-controls button:focus {
+  outline: none;
+}
+
+.title-bar-controls button:active {
+  box-shadow: inset -1px -1px #fff, inset 1px 1px #0a0a0a, inset -2px -2px #dfdfdf, inset 2px 2px grey !important;
+}
+
+.title-quick-defrag {
+  display: inline-flex !important;
   align-items: center;
   justify-content: center;
-  color: #000000;
-  touch-action: auto;
+  margin-right: 4px;
 }
 
-.title-btn:hover {
-  background: #d4d0c8;
+.title-bar-controls button[aria-label="Minimize"] {
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg width='6' height='2' viewBox='0 0 6 2' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill='%23000' d='M0 0h6v2H0z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: bottom 3px left 4px;
 }
 
-.title-btn:active,
-.title-btn.active-toggle {
-  box-shadow:
-    inset 1px 1px var(--w95-border-darkest),
-    inset -1px -1px var(--w95-border-light),
-    inset 2px 2px var(--w95-border-dark);
-  padding-top: 1px;
-  padding-left: 1px;
+.title-bar-controls button[aria-label="Maximize"] {
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg width='9' height='9' viewBox='0 0 9 9' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M9 0H0v9h9V0zM8 2H1v6h7V2z' fill='%23000'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: top 2px left 3px;
 }
 
-.title-btn.active-toggle {
-  background: #a4a098;
+.title-bar-controls button[aria-label="Restore"] {
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg width='8' height='9' viewBox='0 0 8 9' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M2 0h6v6H5v3H0V3h2V0zm5 2H4v1h3V2zM1 5h3v3H1V5z' fill='%23000'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: top 2px left 3px;
+}
+
+.title-bar-controls button[aria-label="Close"] {
+  margin-left: 2px;
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg width='8' height='7' viewBox='0 0 8 7' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M0 0h2v1h1v1h2V1h1V0h2v1H7v1H6v1H5v1h1v1h1v1h1v1H6V6H5V5H3v1H2v1H0V6h1V5h1V4h1V3H2V2H1V1H0V0z' fill='%23000'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: top 3px left 4px;
 }
 
 /* ==========================================================================
-   Тело окна (Window Body)
+   Меню окна (.menu-bar & выпадающие списки)
    ========================================================================== */
+.menu-bar {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 4px;
+  border-bottom: 1px solid #808080;
+  background: var(--surface);
+  position: relative;
+}
+
+.menu-item-dropdown {
+  position: relative;
+}
+
+.menu-item {
+  cursor: pointer;
+  padding: 2px 6px;
+  font-size: 11px;
+}
+
+.menu-item:hover, .menu-item-dropdown.open .menu-item {
+  background-color: #000080;
+  color: #ffffff;
+}
+
+.menu-dropdown-list {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: var(--surface);
+  box-shadow: inset -1px -1px #0a0a0a, inset 1px 1px #dfdfdf, inset -2px -2px grey, inset 2px 2px #fff, 2px 3px 8px rgba(0,0,0,0.5);
+  z-index: 1000;
+  min-width: 180px;
+  display: none;
+  padding: 2px 0;
+}
+
+.menu-dropdown-list.show {
+  display: block;
+}
+
+.menu-dropdown-item {
+  padding: 4px 10px;
+  font-size: 11px;
+  cursor: pointer;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.menu-dropdown-item:hover {
+  background-color: #000080;
+  color: #ffffff;
+}
+
+.menu-dropdown-item.active-lang {
+  font-weight: bold !important;
+  color: #000080;
+}
+
+.menu-dropdown-item.active-lang:hover {
+  color: #ffffff;
+}
+
+.menu-dropdown-separator {
+  height: 1px;
+  background: #808080;
+  border-bottom: 1px solid #ffffff;
+  margin: 3px 2px;
+}
+
+/* Тело окна */
 .window-body {
-  padding: 8px;
+  margin: 6px;
   display: flex;
   flex-direction: column;
   gap: 8px;
   flex: 1;
-  min-height: 0;
 }
 
+/* Рамки изменения размера (Resize Handles) */
+.resize-handle {
+  position: absolute;
+  z-index: 100;
+}
+.resize-n  { top: -4px; left: 0; right: 0; height: 7px; cursor: n-resize; }
+.resize-s  { bottom: -4px; left: 0; right: 0; height: 7px; cursor: s-resize; }
+.resize-w  { left: -4px; top: 0; bottom: 0; width: 7px; cursor: w-resize; }
+.resize-e  { right: -4px; top: 0; bottom: 0; width: 7px; cursor: e-resize; }
+.resize-nw { top: -4px; left: -4px; width: 12px; height: 12px; cursor: nw-resize; }
+.resize-ne { top: -4px; right: -4px; width: 12px; height: 12px; cursor: ne-resize; }
+.resize-sw { bottom: -4px; left: -4px; width: 12px; height: 12px; cursor: sw-resize; }
+.resize-se { bottom: -4px; right: -4px; width: 12px; height: 12px; cursor: se-resize; }
+
+/* Состояние развернутого окна */
+.window.maximized {
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: calc(100vh - var(--taskbar-height)) !important;
+  box-shadow: none !important;
+}
+
+.window.minimized {
+  display: none !important;
+}
+
+/* ==========================================================================
+   Вдавленные панели (.sunken-panel)
+   ========================================================================== */
+.sunken-panel {
+  box-shadow: inset -1px -1px #fff, inset 1px 1px grey, inset -2px -2px #dfdfdf, inset 2px 2px #0a0a0a !important;
+  background: #ffffff !important;
+  box-sizing: border-box;
+}
+
+/* Селектор клинического профиля */
 .field-row {
   display: flex;
   align-items: center;
@@ -244,196 +431,679 @@ html, body {
 }
 
 .label-win95 {
-  font-size: 11px;
-  white-space: nowrap;
-  color: #000000;
-  font-weight: bold;
+  font-size: 12px;
 }
 
 .select-win95 {
   flex: 1;
+  box-shadow: inset -1px -1px #fff, inset 1px 1px grey, inset -2px -2px #dfdfdf, inset 2px 2px #0a0a0a;
   background: #ffffff;
-  padding: 3px 6px;
-  border: none;
+  padding: 2px 4px;
   font-family: inherit;
-  font-size: 11px;
-  box-shadow:
-    inset 1px 1px var(--w95-border-darkest),
-    inset -1px -1px var(--w95-border-light),
-    inset 2px 2px var(--w95-border-dark);
+  font-size: 12px;
+  border: none;
   outline: none;
-  cursor: pointer;
+  height: 24px;
 }
 
-/* Вдавленная панель вывода цитаты */
-.sunken-panel {
-  flex: 1;
-  min-height: 100px;
-  background: var(--w95-sunken-bg);
+/* Текстовое поле цитаты */
+#quote-box {
   padding: 8px 10px;
+  min-height: 85px;
+  max-height: 180px;
   overflow-y: auto;
-  box-shadow:
-    inset 1px 1px var(--w95-border-darkest),
-    inset -1px -1px var(--w95-border-light),
-    inset 2px 2px var(--w95-border-dark);
+  font-family: 'Galmuri9', monospace;
+  font-size: 13px;
+  line-height: 1.45;
+  color: #000000;
+  word-break: break-word;
 }
 
 .quote-content {
-  font-size: 12px;
-  line-height: 1.5;
-  color: #000000;
-  -webkit-user-select: text;
-  user-select: text;
-  word-break: break-word;
-  white-space: pre-wrap;
+  margin: 0;
 }
 
 /* ==========================================================================
-   Кнопки действий
+   АУТЕНТИЧНЫЙ 3D-СЛАЙДЕР WINDOWS 98 (Канавка + Объемный бегунок)
    ========================================================================== */
+.psychosis-panel {
+  box-shadow: inset -1px -1px #fff, inset 1px 1px grey, inset -2px -2px #dfdfdf, inset 2px 2px #fff;
+  border: none;
+  padding: 10px 12px 12px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 6px !important;
+  margin: 0;
+}
+
+.psychosis-panel legend {
+  font-size: 12px;
+  padding: 0 4px;
+}
+
+.psychosis-control-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Каноничный 3D Slider Win98 */
+.win-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  flex: 1;
+  height: 20px;
+  background: transparent;
+  cursor: pointer;
+  margin: 0;
+}
+
+.win-slider:focus {
+  outline: 1px dotted #000;
+  outline-offset: 1px;
+}
+
+/* Вдавленная канавка Win98 (Track) */
+.win-slider::-webkit-slider-runnable-track {
+  height: 5px;
+  background: #808080;
+  box-shadow: inset 1px 1px #404040, inset -1px -1px #ffffff;
+  border: none;
+}
+
+.win-slider::-moz-range-track {
+  height: 5px;
+  background: #808080;
+  box-shadow: inset 1px 1px #404040, inset -1px -1px #ffffff;
+  border: none;
+}
+
+/* Объемный выпуклый бегунок Win98 (Thumb: 11x21px) */
+.win-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 11px;
+  height: 21px;
+  margin-top: -8px;
+  background: #c0c0c0;
+  border: none;
+  border-radius: 0;
+  box-shadow: inset 1px 1px #ffffff, inset -1px -1px #000000, inset 2px 2px #dfdfdf, inset -2px -2px #808080;
+  cursor: pointer;
+}
+
+.win-slider::-moz-range-thumb {
+  width: 11px;
+  height: 21px;
+  background: #c0c0c0;
+  border: none;
+  border-radius: 0;
+  box-shadow: inset 1px 1px #ffffff, inset -1px -1px #000000, inset 2px 2px #dfdfdf, inset -2px -2px #808080;
+  cursor: pointer;
+}
+
+.psychosis-badge {
+  font-size: 12px;
+  color: #000080;
+  white-space: nowrap;
+}
+
+/* Шкала меток строго внутри fieldset */
+.psychosis-scale {
+  display: flex !important;
+  justify-content: space-between !important;
+  font-size: 11px !important;
+  color: #444;
+  margin-top: 2px;
+  width: 100%;
+}
+
+/* ==========================================================================
+   Кнопки (.btn-win95 / button)
+   ========================================================================== */
+button, .btn-win95, .win-btn {
+  box-sizing: border-box;
+  border: none;
+  background: var(--surface);
+  box-shadow: inset -1px -1px #0a0a0a, inset 1px 1px #fff, inset -2px -2px grey, inset 2px 2px #dfdfdf;
+  border-radius: 0;
+  min-height: 24px;
+  padding: 2px 8px;
+  font-family: inherit;
+  font-size: 12px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+
+button:focus, .btn-win95:focus, .win-btn:focus {
+  outline: 1px dotted #000;
+  outline-offset: -4px;
+}
+
+button:active, .btn-win95:active, .win-btn:active {
+  box-shadow: inset -1px -1px #fff, inset 1px 1px #0a0a0a, inset -2px -2px #dfdfdf, inset 2px 2px grey;
+  padding: 3px 7px 1px 9px;
+}
+
+button:disabled, .win-btn:disabled {
+  color: #808080;
+  text-shadow: 1px 1px 0 #ffffff;
+  cursor: not-allowed;
+}
+
+.pixel-btn-icon {
+  width: 14px;
+  height: 14px;
+  display: inline-block;
+  vertical-align: middle;
+  flex-shrink: 0;
+}
+
 .button-row {
   display: flex;
   justify-content: flex-end;
   gap: 6px;
-}
-
-.btn-win95 {
-  background: var(--w95-bg);
-  border: none;
-  padding: 4px 12px;
-  font-family: inherit;
-  font-size: 11px;
-  cursor: pointer;
-  outline: none;
-  box-shadow:
-    inset -1px -1px var(--w95-border-darkest),
-    inset 1px 1px var(--w95-border-light),
-    inset -2px -2px var(--w95-border-dark);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-}
-
-.btn-win95:focus {
-  outline: 1px dotted #000000;
-  outline-offset: -3px;
-}
-
-.btn-win95:active {
-  box-shadow:
-    inset 1px 1px var(--w95-border-darkest),
-    inset -1px -1px var(--w95-border-light),
-    inset 2px 2px var(--w95-border-dark);
-  padding: 5px 11px 3px 13px;
-}
-
-.btn-primary {
-  min-width: 125px;
-  font-weight: bold;
+  margin-top: 4px;
 }
 
 /* ==========================================================================
    Строка состояния (Status Bar)
    ========================================================================== */
 .status-bar {
+  margin: 2px 0 0 0;
   display: flex;
   gap: 2px;
-  padding-top: 2px;
 }
 
 .status-bar-field {
-  flex: 1;
-  background: var(--w95-bg);
-  padding: 2px 6px;
-  font-size: 10px;
-  box-shadow:
-    inset 1px 1px var(--w95-border-dark),
-    inset -1px -1px var(--w95-border-light);
+  box-shadow: inset -1px -1px #fff, inset 1px 1px grey;
+  background: var(--surface);
+  flex-grow: 1;
+  padding: 2px 5px;
+  font-size: 11px;
+  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 /* ==========================================================================
-   Всплывающее уведомление (Toast)
+   Окно DEFRAG.EXE
+   ========================================================================== */
+.defrag-window {
+  top: 70px;
+  left: 60px;
+  width: 520px;
+  min-width: 480px !important;
+  min-height: 380px !important;
+}
+
+.defrag-body {
+  gap: 6px;
+}
+
+.defrag-drive-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+}
+
+.defrag-canvas-container {
+  padding: 3px;
+  height: 166px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #000000 !important;
+}
+
+#defrag-canvas {
+  width: 100%;
+  height: 100%;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  display: block;
+}
+
+.defrag-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 12px;
+  font-size: 11px;
+  padding: 2px 0;
+}
+
+.legend-cell {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.legend-box {
+  width: 10px;
+  height: 10px;
+  box-shadow: inset -1px -1px #0a0a0a, inset 1px 1px #fff;
+  display: inline-block;
+}
+
+.box-blue  { background-color: #0000aa; }
+.box-red   { background-color: #cc0000; }
+.box-white { background-color: #ffffff; }
+.box-green { background-color: #00ff00; }
+
+.defrag-progress-section {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.defrag-progress-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+}
+
+.defrag-progress-track {
+  height: 16px;
+  position: relative;
+  overflow: hidden;
+}
+
+.defrag-progress-fill {
+  height: 100%;
+  background: #000080;
+  background-image: repeating-linear-gradient(
+    90deg,
+    #000080 0px,
+    #000080 8px,
+    #1084d0 8px,
+    #1084d0 10px
+  );
+  transition: width 0.15s ease-out;
+}
+
+.defrag-status-text {
+  font-size: 12px;
+  color: #000000;
+  min-height: 15px;
+}
+
+.defrag-actions {
+  display: flex;
+  gap: 6px;
+  justify-content: flex-end;
+  margin-top: 2px;
+}
+
+/* ==========================================================================
+   Ассистент: Доктор Скрепка (Dr. Clippy)
+   ========================================================================== */
+.clippy-widget {
+  position: fixed;
+  bottom: calc(var(--taskbar-height) + 16px);
+  right: 20px;
+  z-index: 45;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  pointer-events: auto;
+}
+
+/* Каноничный желтый Speech Bubble Office 97 / Windows 95 */
+.clippy-bubble {
+  position: relative;
+  background-color: #ffffe1;
+  border: 1px solid #000000;
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.4);
+  padding: 8px 10px;
+  width: 270px;
+  margin-bottom: 12px;
+  margin-right: 18px;
+  font-family: 'Galmuri9', monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  color: #000000;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  animation: clippyPop 0.25s ease-out;
+}
+
+/* Треугольный хвостик подсказки, направленный точно к Скрепке */
+.clippy-bubble::after {
+  content: '';
+  position: absolute;
+  bottom: -7px;
+  right: 28px;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 7px 7px 0 0;
+  border-color: #ffffe1 transparent transparent transparent;
+}
+
+.clippy-bubble::before {
+  content: '';
+  position: absolute;
+  bottom: -9px;
+  right: 27px;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 8px 8px 0 0;
+  border-color: #000000 transparent transparent transparent;
+}
+
+.clippy-bubble-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  border-bottom: 1px solid #d4d098;
+  padding-bottom: 3px;
+}
+
+.clippy-bubble-title {
+  color: #000080;
+}
+
+.clippy-bubble-close {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  min-height: auto;
+  padding: 0 2px;
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.clippy-bubble-close:hover {
+  background: #e00000;
+  color: #ffffff;
+}
+
+.clippy-bubble-text {
+  word-break: break-word;
+}
+
+.clippy-bubble-options {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 2px;
+}
+
+.clippy-opt-btn {
+  font-size: 11px;
+  padding: 3px 6px;
+  text-align: left;
+  justify-content: flex-start;
+}
+
+.clippy-character {
+  cursor: pointer;
+  transition: transform 0.15s ease-in-out;
+}
+
+.clippy-character:hover {
+  transform: translateY(-2px);
+}
+
+.clippy-character:active {
+  transform: translateY(0) scale(0.97);
+}
+
+@keyframes clippyPop {
+  0% { transform: scale(0.85); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* ==========================================================================
+   Всплывающий тост (Win95 Tooltip)
    ========================================================================== */
 .toast {
   position: absolute;
-  bottom: 38px;
+  bottom: 32px;
   left: 50%;
   transform: translateX(-50%);
   background: #ffffe1;
-  color: #000000;
-  padding: 4px 10px;
-  font-size: 11px;
   border: 1px solid #000000;
-  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
-  opacity: 0;
-  transition: opacity 0.15s ease-in-out;
-  pointer-events: none;
+  box-shadow: 2px 2px 0 rgba(0,0,0,0.4);
+  padding: 4px 10px;
+  font-size: 12px;
+  color: #000000;
+  display: none;
   z-index: 100;
   white-space: nowrap;
 }
 
 .toast.visible {
-  opacity: 1;
+  display: block;
+  animation: clippyPop 0.2s ease-out;
 }
 
 /* ==========================================================================
-   Интерактивные ручки масштабирования (8 направлений с системными курсорами)
+   Панель задач (Taskbar) и меню «Пуск»
    ========================================================================== */
-.resize-handle {
-  position: absolute;
+.taskbar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100vw;
+  height: var(--taskbar-height);
+  background: var(--surface);
+  box-shadow: inset 0 1px 0 #fff;
+  border-top: 1px solid #dfdfdf;
+  display: flex;
+  align-items: center;
+  padding: 2px 3px;
+  gap: 4px;
   z-index: 60;
-  touch-action: none;
 }
 
-.resize-n  { top: -4px; left: 8px; right: 8px; height: 8px; cursor: ns-resize; }
-.resize-s  { bottom: -4px; left: 8px; right: 8px; height: 8px; cursor: ns-resize; }
-.resize-w  { left: -4px; top: 8px; bottom: 8px; width: 8px; cursor: ew-resize; }
-.resize-e  { right: -4px; top: 8px; bottom: 8px; width: 8px; cursor: ew-resize; }
-.resize-nw { top: -4px; left: -4px; width: 14px; height: 14px; cursor: nwse-resize; }
-.resize-ne { top: -4px; right: -4px; width: 14px; height: 14px; cursor: nesw-resize; }
-.resize-sw { bottom: -4px; left: -4px; width: 14px; height: 14px; cursor: nesw-resize; }
-.resize-se { bottom: -4px; right: -4px; width: 14px; height: 14px; cursor: nwse-resize; }
+.start-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 6px;
+  height: 22px;
+}
+
+.start-flag {
+  flex-shrink: 0;
+}
+
+.taskbar-tasks {
+  display: flex;
+  gap: 3px;
+  flex: 1;
+  overflow-x: auto;
+}
+
+.taskbar-tab {
+  height: 22px;
+  min-width: 130px;
+  max-width: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 5px;
+  padding: 0 6px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.taskbar-tab.active-tab {
+  box-shadow: inset -1px -1px #fff, inset 1px 1px #0a0a0a, inset -2px -2px #dfdfdf, inset 2px 2px grey !important;
+  background: #dedede;
+}
+
+.system-tray {
+  box-shadow: inset -1px -1px #fff, inset 1px 1px grey;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 6px;
+  height: 22px;
+  font-size: 12px;
+}
+
+.tray-icon {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.start-menu {
+  position: fixed;
+  bottom: var(--taskbar-height);
+  left: 2px;
+  background: var(--surface);
+  box-shadow: inset -1px -1px #0a0a0a, inset 1px 1px #dfdfdf, inset -2px -2px grey, inset 2px 2px #fff, 3px 3px 10px rgba(0,0,0,0.5);
+  display: none;
+  flex-direction: row;
+  z-index: 70;
+  width: 220px;
+}
+
+.start-menu.open {
+  display: flex;
+}
+
+.start-menu-banner {
+  background: linear-gradient(180deg, #000080, #1084d0);
+  color: #ffffff;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  padding: 12px 3px;
+  font-size: 14px;
+  letter-spacing: 2px;
+}
+
+.start-menu-items {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 2px 0;
+}
+
+.start-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.start-item:hover {
+  background-color: #000080;
+  color: #ffffff;
+}
+
+.start-divider {
+  height: 1px;
+  background: #808080;
+  border-bottom: 1px solid #ffffff;
+  margin: 3px 2px;
+}
 
 /* ==========================================================================
-   Стилизация аутентичных скроллбаров Windows 95
+   КАНОНИЧНЫЙ ПОЛНОЭКРАННЫЙ BSOD (СИНИЙ ЭКРАН 95)
    ========================================================================== */
-::-webkit-scrollbar {
-  width: 14px;
-  height: 14px;
-  background: #dfdfdf;
+.bsod-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: #0000aa;
+  color: #ffffff;
+  font-family: 'Galmuri9', monospace;
+  font-size: 14px;
+  line-height: 1.5;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 99999 !important;
+  padding: 20px;
+  cursor: pointer;
 }
 
-::-webkit-scrollbar-thumb {
-  background: var(--w95-bg);
-  box-shadow:
-    inset -1px -1px var(--w95-border-darkest),
-    inset 1px 1px var(--w95-border-light),
-    inset -2px -2px var(--w95-border-dark);
+.bsod-overlay.active {
+  display: flex;
 }
 
-::-webkit-scrollbar-thumb:active {
-  box-shadow:
-    inset 1px 1px var(--w95-border-darkest),
-    inset -1px -1px var(--w95-border-light),
-    inset 2px 2px var(--w95-border-dark);
+.bsod-content {
+  max-width: 720px;
+  text-align: left;
+}
+
+.bsod-badge {
+  text-align: center;
+  margin-bottom: 18px;
+}
+
+.bsod-badge span {
+  background-color: #c0c0c0;
+  color: #0000aa;
+  padding: 2px 14px;
+  display: inline-block;
+  font-size: 14px;
+}
+
+.bsod-press {
+  animation: blinkCursor 1s infinite step-start;
+}
+
+@keyframes blinkCursor {
+  50% { opacity: 0; }
+}
+
+.crt-static-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 998;
+  opacity: 0;
+  background-image: repeating-radial-gradient(circle, #fff 0, #fff 1px, transparent 1px, transparent 100%);
+  background-size: 4px 4px;
+  transition: opacity 0.08s ease;
+}
+
+.crt-static-overlay.active {
+  opacity: 0.15;
 }
 
 /* ==========================================================================
-   Адаптивность для мобильных устройств (Android)
+   Мобильная адаптация
    ========================================================================== */
-@media (max-width: 480px) {
-  .status-bar {
-    flex-direction: column;
-    gap: 1px;
+@media (max-width: 640px) {
+  .window {
+    min-width: calc(100vw - 12px) !important;
+    left: 6px !important;
   }
-  .button-row {
-    flex-direction: column-reverse;
+
+  .defrag-window {
+    width: calc(100vw - 12px) !important;
+    left: 6px !important;
+    top: 50px !important;
   }
-  .btn-win95 {
-    width: 100%;
+
+  .clippy-widget {
+    right: 10px;
+    bottom: calc(var(--taskbar-height) + 10px);
+  }
+
+  .clippy-bubble {
+    width: 230px;
+    margin-right: 10px;
   }
 }

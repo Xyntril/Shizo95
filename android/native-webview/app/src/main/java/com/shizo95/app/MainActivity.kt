@@ -80,7 +80,7 @@ class MainActivity : AppCompatActivity() {
         webView.addJavascriptInterface(WebAppInterface(this), "AndroidBridge")
 
         webView.webViewClient = object : WebViewClient() {}
-        webView.webChromeClient = object : WebChromeClient()
+        webView.webChromeClient = object : WebChromeClient() {}
     }
 
     override fun onDestroy() {
@@ -111,7 +111,7 @@ class MainActivity : AppCompatActivity() {
                     @Suppress("DEPRECATION")
                     vibrator.vibrate(milliseconds)
                 }
-            } catch (_: Exception) {}
+            } catch (e: Exception) {}
         }
 
         @JavascriptInterface

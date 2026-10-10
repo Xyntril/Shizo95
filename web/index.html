@@ -3,10 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Шизо 95: Клинический синтезатор</title>
-  <link rel="stylesheet" href="style.css">
-  <link rel="manifest" href="manifest.json">
-  <link rel="icon" type="image/png" href="icon-192.png">
+  <title>Шизо 95: Клинический синтезатор & DEFRAG.EXE</title>
+  
+  <link rel="stylesheet" href="./98.css">
+  <link rel="stylesheet" href="./style.css">
+  <link rel="manifest" href="./manifest.json">
+  <link rel="icon" type="image/png" href="./icon-192.png">
   <meta name="theme-color" content="#008080">
 </head>
 <body>
@@ -15,12 +17,58 @@
   <canvas id="earthbound-canvas"></canvas>
   <div class="scanline-overlay"></div>
 
-  <!-- Рабочая область с плавающим окном Windows 95 -->
+  <!-- Рабочая область Windows 95 -->
   <div class="desktop-viewport" id="desktop-viewport">
     
-    <div class="window" id="win95-window" role="dialog" aria-labelledby="dialog-title">
+    <!-- Иконки рабочего стола -->
+    <div class="desktop-icons">
+      <div class="desktop-icon" id="dicon-shizo" tabindex="0">
+        <div class="icon-graphic icon-shizo-graphic">
+          <svg viewBox="0 0 32 32" width="32" height="32">
+            <rect x="2" y="2" width="28" height="28" fill="#c0c0c0" stroke="#000" stroke-width="2"/>
+            <rect x="5" y="5" width="10" height="10" fill="#f25022" stroke="#000" stroke-width="1"/>
+            <rect x="17" y="5" width="10" height="10" fill="#7fba00" stroke="#000" stroke-width="1"/>
+            <rect x="5" y="17" width="10" height="10" fill="#00a4ef" stroke="#000" stroke-width="1"/>
+            <rect x="17" y="17" width="10" height="10" fill="#ffb900" stroke="#000" stroke-width="1"/>
+          </svg>
+        </div>
+        <span class="icon-label">Шизо_95.exe</span>
+      </div>
+
+      <div class="desktop-icon" id="dicon-defrag" tabindex="0">
+        <div class="icon-graphic icon-defrag-graphic">
+          <svg viewBox="0 0 32 32" width="32" height="32">
+            <rect x="3" y="3" width="26" height="26" fill="#000080" stroke="#000" stroke-width="2"/>
+            <rect x="7" y="3" width="16" height="10" fill="#ffffff" stroke="#000" stroke-width="1"/>
+            <rect x="18" y="5" width="3" height="6" fill="#000080"/>
+            <rect x="6" y="16" width="20" height="10" fill="#ffffff" stroke="#000" stroke-width="1"/>
+            <path d="M 9 20 L 15 20 L 15 18 L 21 21 L 15 24 L 15 22 L 9 22 Z" fill="#cc0000"/>
+          </svg>
+        </div>
+        <span class="icon-label">DEFRAG.EXE</span>
+      </div>
+
+      <div class="desktop-icon" id="dicon-clippy" tabindex="0">
+        <div class="icon-graphic icon-clippy-graphic">
+          <svg viewBox="0 0 32 32" width="32" height="32">
+            <rect x="5" y="4" width="22" height="25" fill="#fffeb8" stroke="#8c824c" stroke-width="1"/>
+            <ellipse cx="16" cy="18" rx="6" ry="9" fill="none" stroke="#202020" stroke-width="2"/>
+            <circle cx="16" cy="7" r="4" fill="#e8e8e8" stroke="#000" stroke-width="1"/>
+            <circle cx="16" cy="7" r="1.5" fill="#000"/>
+            <circle cx="14" cy="15" r="1.5" fill="#000"/>
+            <circle cx="18" cy="15" r="1.5" fill="#000"/>
+          </svg>
+        </div>
+        <span class="icon-label">Д-р Скрепка</span>
+      </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- ОКНО 1: Шизо_95.exe — Клинический генератор                   -->
+    <!-- ============================================================ -->
+    <div class="window win95-window active-window" id="win95-window" role="dialog" aria-labelledby="dialog-title">
       
-      <!-- Интерактивные границы и углы для растягивания (8 направлений с системными курсорами) -->
+      <!-- Интерактивные границы и углы для растягивания (8 направлений) -->
       <div class="resize-handle resize-n" data-dir="n"></div>
       <div class="resize-handle resize-s" data-dir="s"></div>
       <div class="resize-handle resize-w" data-dir="w"></div>
@@ -30,29 +78,74 @@
       <div class="resize-handle resize-sw" data-dir="sw"></div>
       <div class="resize-handle resize-se" data-dir="se"></div>
 
-      <!-- Шапка окна (Title Bar & Drag Handle) -->
+      <!-- Шапка окна (Title Bar & Drag Handle) с 16x16 Windows логотипом -->
       <div class="title-bar" id="window-title-bar">
         <div class="title-bar-text">
-          <svg class="win-icon" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect width="16" height="16" fill="#C0C0C0"/>
-            <rect x="1" y="1" width="14" height="14" fill="#000080"/>
-            <rect x="3" y="3" width="4" height="4" fill="#FF0000"/>
-            <rect x="9" y="3" width="4" height="4" fill="#00FF00"/>
-            <rect x="3" y="9" width="4" height="4" fill="#00FFFF"/>
-            <rect x="9" y="9" width="4" height="4" fill="#FFFF00"/>
+          <svg class="win-icon" viewBox="0 0 16 16" width="16" height="16">
+            <rect x="1" y="1" width="6" height="6" fill="#f25022" stroke="#000" stroke-width="1"/>
+            <rect x="9" y="1" width="6" height="6" fill="#7fba00" stroke="#000" stroke-width="1"/>
+            <rect x="1" y="9" width="6" height="6" fill="#00a4ef" stroke="#000" stroke-width="1"/>
+            <rect x="9" y="9" width="6" height="6" fill="#ffb900" stroke="#000" stroke-width="1"/>
           </svg>
           <span id="dialog-title">Шизо_95.exe — Клинический синтезатор</span>
         </div>
 
         <div class="title-bar-controls">
-          <!-- Тумблер лёгкой ретро-полупрозрачности окна (Ghost mode) -->
-          <button class="title-btn" id="btn-ghost" title="Тумблер прозрачности окна (Ghost Mode)" aria-label="Прозрачность">░</button>
-          <!-- Свернуть в компактную плашку заголовка (Roll-up) -->
-          <button class="title-btn" id="btn-minimize" title="Свернуть в плашку" aria-label="Свернуть">_</button>
-          <!-- Развернуть / Восстановить размер -->
-          <button class="title-btn" id="btn-maximize" title="Развернуть/Восстановить" aria-label="Развернуть">□</button>
-          <!-- Закрыть процесс -->
-          <button class="title-btn" id="btn-close" title="Закрыть" aria-label="Закрыть">✕</button>
+          <button class="title-quick-defrag" id="title-btn-defrag" title="Быстрый запуск DEFRAG.EXE" aria-label="DEFRAG">
+            <svg viewBox="0 0 12 12" width="12" height="12">
+              <rect x="1" y="1" width="10" height="10" fill="#000080"/>
+              <rect x="3" y="1" width="6" height="4" fill="#ffffff"/>
+              <rect x="3" y="7" width="6" height="3" fill="#ffffff"/>
+            </svg>
+          </button>
+          <button aria-label="Minimize" id="btn-minimize" title="Свернуть в панель задач"></button>
+          <button aria-label="Maximize" id="btn-maximize" title="Развернуть/Восстановить"></button>
+          <button aria-label="Close" id="btn-close" title="Закрыть процесс"></button>
+        </div>
+      </div>
+
+      <!-- Верхнее меню окна (Файл, Действия, Язык, Справка) -->
+      <div class="menu-bar window-main-menu" id="window-main-menu">
+        <div class="menu-item-dropdown" id="dropdown-file">
+          <div class="menu-item" id="menu-head-file" tabindex="0">Файл</div>
+          <div class="menu-dropdown-list" id="list-file">
+            <div class="menu-dropdown-item" id="menu-file-copy">📋 Скопировать мысль</div>
+            <div class="menu-dropdown-item" id="menu-file-creative">🎲 Творческий импульс</div>
+            <div class="menu-dropdown-separator"></div>
+            <div class="menu-dropdown-item" id="menu-file-min">_ Свернуть в трей</div>
+            <div class="menu-dropdown-item" id="menu-file-exit">✕ Выход</div>
+          </div>
+        </div>
+
+        <div class="menu-item-dropdown" id="dropdown-action">
+          <div class="menu-item" id="menu-head-action" tabindex="0">Действия</div>
+          <div class="menu-dropdown-list" id="list-action">
+            <div class="menu-dropdown-item" id="menu-act-defrag">💾 Запустить DEFRAG.EXE</div>
+            <div class="menu-dropdown-item" id="menu-act-clippy">🩺 Вызвать Доктора Скрепку</div>
+            <div class="menu-dropdown-separator"></div>
+            <div class="menu-dropdown-item" id="menu-act-entropy">🔄 Сброс энтропии</div>
+            <div class="menu-dropdown-item" id="menu-act-bsod">⚡ Искусственный BSOD 95</div>
+          </div>
+        </div>
+
+        <div class="menu-item-dropdown" id="dropdown-lang">
+          <div class="menu-item" id="menu-head-lang" tabindex="0">Язык</div>
+          <div class="menu-dropdown-list" id="list-lang">
+            <div class="menu-dropdown-item active-lang" id="lang-ru" data-lang="ru">✓ 🇷🇺 Русский (RU)</div>
+            <div class="menu-dropdown-item" id="lang-en" data-lang="en">🇬🇧 English (EN)</div>
+            <div class="menu-dropdown-item" id="lang-fr" data-lang="fr">🇫🇷 Français (FR)</div>
+            <div class="menu-dropdown-item" id="lang-la" data-lang="la">🏛 Lingua Latina (LA)</div>
+            <div class="menu-dropdown-separator"></div>
+            <div class="menu-dropdown-item" id="lang-cz" data-lang="cz">🔤 Русский латиницей (CZ/Šč)</div>
+          </div>
+        </div>
+
+        <div class="menu-item-dropdown" id="dropdown-help">
+          <div class="menu-item" id="menu-head-help" tabindex="0">Справка</div>
+          <div class="menu-dropdown-list" id="list-help">
+            <div class="menu-dropdown-item" id="menu-help-about">❓ О программе Шизо 95</div>
+            <div class="menu-dropdown-item" id="menu-help-clinical">📋 Клинический протокол</div>
+          </div>
         </div>
       </div>
 
@@ -64,9 +157,10 @@
           <label class="label-win95" for="profile-select">Профиль:</label>
           <select id="profile-select" class="select-win95">
             <option value="0">1. Атаксическая инкогеренция (Word Salad)</option>
-            <option value="1">2. Параноидный неологизм / Технопсихоз</option>
-            <option value="2">3. Ритуальная латинская вербигерация</option>
-            <option value="3">4. Олигофазический бытовой сюрреализм</option>
+            <option value="1">2. Параноидный неологизм / Технопсихоз (Arch Linux)</option>
+            <option value="2">3. Ритуальная латинская вербигерация (Sanctificatio)</option>
+            <option value="3">4. Олигофазический бытовой сюрреализм & Блохэй</option>
+            <option value="4">5. Случайная клиническая мысль из базы</option>
           </select>
         </div>
 
@@ -75,13 +169,48 @@
           <p class="quote-content" id="quote-text">Инициализация клинического генератора шизофазии...</p>
         </div>
 
-        <!-- Кнопки управления -->
+        <!-- Слайдер "Фаза клинического обострения" с 3D канавкой и бегунком -->
+        <fieldset class="psychosis-panel">
+          <legend>Фаза клинического обострения:</legend>
+          <div class="psychosis-control-row">
+            <input type="range" min="0" max="100" value="0" id="psychosis-slider" class="win-slider">
+            <span class="psychosis-badge" id="psychosis-badge">0: Нормотимия (0%)</span>
+          </div>
+          <div class="psychosis-scale">
+            <span>0: Нормотимия</span>
+            <span>35: Резонерство</span>
+            <span>65: Соскальзывание</span>
+            <span>100: Word Salad</span>
+          </div>
+        </fieldset>
+
+        <!-- Нижняя панель: строго 3 чистые кнопки -->
         <div class="button-row">
           <button class="btn-win95" id="btn-copy">
-            <span>📋</span> Скопировать
+            <svg class="pixel-btn-icon" viewBox="0 0 14 14" width="14" height="14">
+              <rect x="4" y="1" width="8" height="10" fill="#fff" stroke="#000" stroke-width="1"/>
+              <rect x="1" y="4" width="8" height="9" fill="#c0c0c0" stroke="#000" stroke-width="1"/>
+              <line x1="3" y1="7" x2="7" y2="7" stroke="#000" stroke-width="1"/>
+              <line x1="3" y1="9" x2="7" y2="9" stroke="#000" stroke-width="1"/>
+            </svg>
+            <span>Скопировать</span>
           </button>
           <button class="btn-win95 btn-primary" id="btn-synthesize">
-            <span>⚡</span> Ресинтез мысли
+            <svg class="pixel-btn-icon" viewBox="0 0 14 14" width="14" height="14">
+              <polygon points="8,1 3,8 7,8 5,13 11,6 7,6" fill="#ffff00" stroke="#000" stroke-width="1"/>
+            </svg>
+            <span>Ресинтез мысли</span>
+          </button>
+          <button class="btn-win95" id="btn-creative">
+            <svg class="pixel-btn-icon" viewBox="0 0 14 14" width="14" height="14">
+              <rect x="1" y="1" width="12" height="12" rx="2" fill="#fff" stroke="#000" stroke-width="1"/>
+              <circle cx="4" cy="4" r="1.2" fill="#cc0000"/>
+              <circle cx="10" cy="4" r="1.2" fill="#000080"/>
+              <circle cx="7" cy="7" r="1.2" fill="#000"/>
+              <circle cx="4" cy="10" r="1.2" fill="#00aa00"/>
+              <circle cx="10" cy="10" r="1.2" fill="#cc0000"/>
+            </svg>
+            <span>Творческий импульс</span>
           </button>
         </div>
 
@@ -98,17 +227,352 @@
       <div class="toast" id="toast-msg"></div>
 
     </div>
+
+    <!-- ============================================================ -->
+    <!-- ОКНО 2: DEFRAG.EXE — Дефрагментатор навязчивых мыслей          -->
+    <!-- ============================================================ -->
+    <div class="window win95-window defrag-window" id="defrag-window">
+      <!-- Title Bar с иконкой дискеты/HDD -->
+      <div class="title-bar" id="defrag-title-bar">
+        <div class="title-bar-text">
+          <svg class="win-icon" viewBox="0 0 16 16" width="16" height="16">
+            <rect x="1" y="1" width="14" height="14" fill="#000080" stroke="#000" stroke-width="1"/>
+            <rect x="4" y="1" width="8" height="6" fill="#c0c0c0"/>
+            <rect x="9" y="2" width="2" height="4" fill="#000080"/>
+            <rect x="3" y="9" width="10" height="5" fill="#ffffff"/>
+            <path d="M 5 11 L 8 11 L 8 10 L 11 12 L 8 14 L 8 13 L 5 13 Z" fill="#cc0000"/>
+          </svg>
+          <span>Дефрагментация навязчивых мыслей (DEFRAG.EXE)</span>
+        </div>
+        <div class="title-bar-controls">
+          <button aria-label="Minimize" id="defrag-btn-min"></button>
+          <button aria-label="Maximize" id="defrag-btn-max"></button>
+          <button aria-label="Close" id="defrag-btn-close"></button>
+        </div>
+      </div>
+
+      <!-- Меню окна дефрагментатора -->
+      <div class="menu-bar">
+        <div class="menu-item-dropdown">
+          <div class="menu-item" tabindex="0">Файл</div>
+          <div class="menu-dropdown-list">
+            <div class="menu-dropdown-item" id="defrag-m-reset">🔄 Сброс диска C:</div>
+            <div class="menu-dropdown-item" id="defrag-m-close">✕ Закрыть окно</div>
+          </div>
+        </div>
+        <div class="menu-item-dropdown">
+          <div class="menu-item" tabindex="0">Действия</div>
+          <div class="menu-dropdown-list">
+            <div class="menu-dropdown-item" id="defrag-m-start">▶ Запуск дефрагментации</div>
+            <div class="menu-dropdown-item" id="defrag-m-pause">⏸ Пауза</div>
+            <div class="menu-dropdown-item" id="defrag-m-scramble">🎲 Засорить кластеры бредом</div>
+          </div>
+        </div>
+        <div class="menu-item" id="defrag-menu-clusters" tabindex="0">Кластеры: 512</div>
+        <div class="menu-item" id="defrag-menu-help" tabindex="0">Справка FAT95</div>
+      </div>
+
+      <!-- Тело дефрагментатора -->
+      <div class="window-body defrag-body">
+        <div class="defrag-drive-row">
+          <div class="defrag-drive-title">
+            Диск: <strong>C: [ПОДСОЗНАНИЕ]</strong> (FAT-95-SCHIZO)
+          </div>
+          <div class="defrag-head-mode" id="defrag-head-mode">Статус: Ожидание</div>
+        </div>
+
+        <!-- Canvas сетка кластеров -->
+        <div class="sunken-panel defrag-canvas-container">
+          <canvas id="defrag-canvas" width="480" height="160"></canvas>
+        </div>
+
+        <!-- Легенда кластеров -->
+        <div class="defrag-legend">
+          <div class="legend-cell">
+            <span class="legend-box box-blue"></span>
+            <span class="legend-text">Связные мысли / Свободно</span>
+          </div>
+          <div class="legend-cell">
+            <span class="legend-box box-red"></span>
+            <span class="legend-text">Навязчивый бред / Фрагментировано</span>
+          </div>
+          <div class="legend-cell">
+            <span class="legend-box box-white"></span>
+            <span class="legend-text">Пустота / Не распределено</span>
+          </div>
+          <div class="legend-cell">
+            <span class="legend-box box-green"></span>
+            <span class="legend-text">Озарение / Активная LBA-головка (3-6)</span>
+          </div>
+        </div>
+
+        <!-- Прогресс дефрагментации -->
+        <div class="defrag-progress-section">
+          <div class="defrag-progress-header">
+            <span id="defrag-pct-label">Дефрагментация... 0% выполнено</span>
+            <span id="defrag-time-est">Расчет: FAT95</span>
+          </div>
+          <div class="sunken-panel defrag-progress-track">
+            <div class="defrag-progress-fill" id="defrag-progress-fill" style="width: 0%;"></div>
+          </div>
+          <div class="defrag-status-text" id="defrag-status-text">
+            Готов к анализу структуры параноидальных кластеров.
+          </div>
+        </div>
+
+        <!-- Кнопки управления дефрагментатором с пиксельными иконками -->
+        <div class="defrag-actions">
+          <button class="win-btn primary-btn" id="btn-defrag-start">
+            <svg class="pixel-btn-icon" viewBox="0 0 14 14" width="14" height="14">
+              <polygon points="3,2 12,7 3,12" fill="#00aa00" stroke="#000" stroke-width="1"/>
+            </svg>
+            <span>Запуск</span>
+          </button>
+          <button class="win-btn" id="btn-defrag-pause" disabled>
+            <svg class="pixel-btn-icon" viewBox="0 0 14 14" width="14" height="14">
+              <rect x="2" y="2" width="3" height="10" fill="#000080" stroke="#000" stroke-width="1"/>
+              <rect x="8" y="2" width="3" height="10" fill="#000080" stroke="#000" stroke-width="1"/>
+            </svg>
+            <span>Пауза</span>
+          </button>
+          <button class="win-btn" id="btn-defrag-reset">
+            <svg class="pixel-btn-icon" viewBox="0 0 14 14" width="14" height="14">
+              <path d="M 11 7 A 4 4 0 1 1 7 3 L 7 1 L 10 3.5 L 7 6 L 7 4 A 3 3 0 1 0 10 7 Z" fill="#000080"/>
+            </svg>
+            <span>Сброс</span>
+          </button>
+          <button class="win-btn" id="btn-defrag-scramble">
+            <svg class="pixel-btn-icon" viewBox="0 0 14 14" width="14" height="14">
+              <rect x="1" y="1" width="12" height="12" rx="2" fill="#fff" stroke="#000" stroke-width="1"/>
+              <circle cx="4" cy="4" r="1" fill="#cc0000"/>
+              <circle cx="10" cy="4" r="1" fill="#000080"/>
+              <circle cx="7" cy="7" r="1.2" fill="#000"/>
+              <circle cx="4" cy="10" r="1" fill="#00aa00"/>
+              <circle cx="10" cy="10" r="1" fill="#cc0000"/>
+            </svg>
+            <span>Засорить бред</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Статус бар дефрагментатора -->
+      <footer class="status-bar">
+        <div class="status-bar-field" id="defrag-stat-clusters">Кластеров: 512</div>
+        <div class="status-bar-field" id="defrag-stat-frag">Фрагментация: 78%</div>
+        <div class="status-bar-field" id="defrag-stat-head">LBA головки: 4 активных</div>
+      </footer>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- АССИСТЕНТ: ДОКТОР СКРЕПКА (Dr. Clippy)                        -->
+    <!-- ============================================================ -->
+    <div class="clippy-widget" id="clippy-widget">
+      <!-- Всплывающий Speech Bubble Windows 95 / Office 97 -->
+      <div class="clippy-bubble" id="clippy-bubble">
+        <div class="clippy-bubble-header">
+          <span class="clippy-bubble-title">Доктор Скрепка</span>
+          <button class="clippy-bubble-close" id="clippy-bubble-close" title="Закрыть">✕</button>
+        </div>
+        <div class="clippy-bubble-text" id="clippy-bubble-text">
+          Похоже, вы пытаетесь скрыть мысли от спутника. Заземлить системный блок через батарею отопления?
+        </div>
+        <div class="clippy-bubble-options" id="clippy-bubble-options">
+          <button class="win-btn clippy-opt-btn" data-action="ground">Да, заземлить батарею</button>
+          <button class="win-btn clippy-opt-btn" data-action="ignore">Игнорировать облучение</button>
+        </div>
+      </div>
+
+      <!-- Каноничный стальной образ Microsoft Clippy -->
+      <div class="clippy-character" id="clippy-character" title="Доктор Скрепка (Кликните для консультации)">
+        <svg viewBox="0 0 100 120" width="84" height="100" class="clippy-svg">
+          <defs>
+            <linearGradient id="clippy-steel" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#202020"/>
+              <stop offset="20%" stop-color="#e8e8e8"/>
+              <stop offset="55%" stop-color="#c8c8c8"/>
+              <stop offset="85%" stop-color="#808080"/>
+              <stop offset="100%" stop-color="#202020"/>
+            </linearGradient>
+            <radialGradient id="reflector-mirror" cx="40%" cy="40%" r="60%">
+              <stop offset="0%" stop-color="#ffffff"/>
+              <stop offset="40%" stop-color="#e0e0e0"/>
+              <stop offset="70%" stop-color="#a0a0a0"/>
+              <stop offset="100%" stop-color="#505050"/>
+            </radialGradient>
+          </defs>
+
+          <!-- Тень персонажа -->
+          <ellipse cx="50" cy="114" rx="30" ry="5" fill="rgba(0,0,0,0.28)"/>
+
+          <!-- Каноничная форма стальной скрепки -->
+          <g class="clippy-wire">
+            <path d="M 34 100 L 34 34 A 16 16 0 0 1 66 34 L 66 94 A 13 13 0 0 1 42 94 L 42 48 A 9 9 0 0 1 58 48 L 58 84"
+                  fill="none" stroke="#202020" stroke-width="7.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M 34 100 L 34 34 A 16 16 0 0 1 66 34 L 66 94 A 13 13 0 0 1 42 94 L 42 48 A 9 9 0 0 1 58 48 L 58 84"
+                  fill="none" stroke="url(#clippy-steel)" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M 35 98 L 35 34 A 15 15 0 0 1 65 34 L 65 92"
+                  fill="none" stroke="#ffffff" stroke-width="1.3" stroke-linecap="round" opacity="0.9"/>
+          </g>
+
+          <!-- Медицинский налобный рефлектор -->
+          <g class="clippy-reflector" id="clippy-reflector">
+            <path d="M 28 26 C 42 22 58 22 72 26" fill="none" stroke="#202020" stroke-width="2.5" stroke-linecap="round"/>
+            <path d="M 28 26 C 42 22 58 22 72 26" fill="none" stroke="#e8e8e8" stroke-width="1.5" stroke-linecap="round"/>
+            <circle cx="50" cy="18" r="10.5" fill="url(#reflector-mirror)" stroke="#202020" stroke-width="1.4"/>
+            <circle cx="50" cy="18" r="8" fill="none" stroke="#ffffff" stroke-width="0.8" opacity="0.6"/>
+            <circle cx="50" cy="18" r="2.4" fill="#000000" id="reflector-core"/>
+            <ellipse cx="53" cy="14" rx="2.5" ry="1.2" fill="#ffffff" transform="rotate(-30 53 14)" opacity="0.9"/>
+          </g>
+
+          <!-- Выразительные дугообразные брови -->
+          <g class="clippy-eyebrows" id="clippy-eyebrows">
+            <path d="M 31 35 Q 38 29 46 34" fill="none" stroke="#111111" stroke-width="3.2" stroke-linecap="round" id="eyebrow-left"/>
+            <path d="M 54 34 Q 62 29 69 35" fill="none" stroke="#111111" stroke-width="3.2" stroke-linecap="round" id="eyebrow-right"/>
+          </g>
+
+          <!-- Овальные белые глаза с подвижными зрачками -->
+          <g class="clippy-eyes" id="clippy-eyes">
+            <ellipse cx="38.5" cy="46" rx="7.5" ry="9.5" fill="#ffffff" stroke="#202020" stroke-width="1.8"/>
+            <ellipse cx="61.5" cy="46" rx="7.5" ry="9.5" fill="#ffffff" stroke="#202020" stroke-width="1.8"/>
+            <circle cx="39" cy="46" r="3.8" fill="#000000" id="pupil-left"/>
+            <circle cx="62" cy="46" r="3.8" fill="#000000" id="pupil-right"/>
+            <circle cx="41" cy="44" r="1.3" fill="#ffffff"/>
+            <circle cx="64" cy="44" r="1.3" fill="#ffffff"/>
+          </g>
+
+          <!-- Рот / улыбка -->
+          <path d="M 46 64 C 48 67 52 67 54 64" fill="none" stroke="#202020" stroke-width="2" stroke-linecap="round" id="clippy-mouth"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- КАНОНИЧНЫЙ ПОЛНОЭКРАННЫЙ BSOD (СИНИЙ ЭКРАН 95)                -->
+    <!-- ============================================================ -->
+    <div class="bsod-overlay" id="bsod-overlay">
+      <div class="bsod-content">
+        <div class="bsod-badge">
+          <span>&nbsp;&nbsp;&nbsp;Windows&nbsp;&nbsp;&nbsp;</span>
+        </div>
+        <br>
+        <p>Неустранимая ошибка 0E произошла по адресу 0028:C0011E36 в когнитивном шлюзе VCACHE(01) + 000010E8.</p>
+        <p>Текущий процесс ARCH_PACMAN_LOCKED прерван из-за конфликта синаптических прерываний.</p>
+        <br>
+        <p>* Нажмите любую клавишу для попытки вызова скорой помощи разума.</p>
+        <p>* Нажмите CTRL+ALT+DEL для перезагрузки здравого смысла (не рекомендуется).</p>
+        <br>
+        <p>Стек сознания переполнен. Системный вызов Blåhaj_Shield() вернул статус KERNEL_PANIC.</p>
+        <br>
+        <div class="bsod-press">Нажмите любую клавишу для возврата на рабочий стол _</div>
+      </div>
+    </div>
+
+    <!-- Эффект статического разряда / ЭЛТ помех -->
+    <div class="crt-static-overlay" id="crt-overlay"></div>
+
+    <!-- Панель задач Windows 95 (Taskbar) -->
+    <div class="taskbar">
+      <!-- Кнопка Пуск -->
+      <button class="start-btn" id="start-btn">
+        <svg viewBox="0 0 16 16" width="16" height="16" class="start-flag">
+          <rect x="1" y="1" width="6" height="6" fill="#f25022" stroke="#000" stroke-width="1"/>
+          <rect x="9" y="1" width="6" height="6" fill="#7fba00" stroke="#000" stroke-width="1"/>
+          <rect x="1" y="9" width="6" height="6" fill="#00a4ef" stroke="#000" stroke-width="1"/>
+          <rect x="9" y="9" width="6" height="6" fill="#ffb900" stroke="#000" stroke-width="1"/>
+        </svg>
+        <span>Пуск</span>
+      </button>
+
+      <!-- Меню Пуск -->
+      <div class="start-menu" id="start-menu">
+        <div class="start-menu-banner">
+          <span>Windows<strong>95</strong></span>
+        </div>
+        <div class="start-menu-items">
+          <div class="start-item" id="smenu-shizo">
+            <svg viewBox="0 0 16 16" width="16" height="16">
+              <rect x="1" y="1" width="6" height="6" fill="#f25022"/>
+              <rect x="9" y="1" width="6" height="6" fill="#7fba00"/>
+              <rect x="1" y="9" width="6" height="6" fill="#00a4ef"/>
+              <rect x="9" y="9" width="6" height="6" fill="#ffb900"/>
+            </svg>
+            <span>Шизо_95.exe</span>
+          </div>
+          <div class="start-item" id="smenu-defrag">
+            <svg viewBox="0 0 16 16" width="16" height="16">
+              <rect x="1" y="1" width="14" height="14" fill="#000080"/>
+              <rect x="4" y="1" width="8" height="6" fill="#c0c0c0"/>
+              <rect x="3" y="9" width="10" height="5" fill="#ffffff"/>
+            </svg>
+            <span>Дефрагментатор мыслей</span>
+          </div>
+          <div class="start-item" id="smenu-clippy">
+            <svg viewBox="0 0 16 16" width="16" height="16">
+              <ellipse cx="8" cy="9" rx="4" ry="6" fill="none" stroke="#202020" stroke-width="1.5"/>
+              <circle cx="8" cy="3" r="2.5" fill="#e8e8e8" stroke="#000" stroke-width="0.8"/>
+            </svg>
+            <span>Помощь Доктора Скрепки</span>
+          </div>
+          <div class="start-divider"></div>
+          <div class="start-item" id="smenu-restart">
+            <svg viewBox="0 0 16 16" width="16" height="16">
+              <polygon points="9,1 4,9 8,9 6,15 13,7 9,7" fill="#ffff00" stroke="#000" stroke-width="1"/>
+            </svg>
+            <span>Сброс реальности (BSOD)...</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Вкладки открытых окон -->
+      <div class="taskbar-tasks">
+        <button class="taskbar-tab active-tab" id="tab-shizo">
+          <svg viewBox="0 0 14 14" width="14" height="14">
+            <rect x="1" y="1" width="5" height="5" fill="#f25022"/>
+            <rect x="8" y="1" width="5" height="5" fill="#7fba00"/>
+            <rect x="1" y="8" width="5" height="5" fill="#00a4ef"/>
+            <rect x="8" y="8" width="5" height="5" fill="#ffb900"/>
+          </svg>
+          <span class="tab-title">Шизо_95.exe</span>
+        </button>
+        <button class="taskbar-tab" id="tab-defrag">
+          <svg viewBox="0 0 14 14" width="14" height="14">
+            <rect x="1" y="1" width="12" height="12" fill="#000080"/>
+            <rect x="3" y="1" width="7" height="5" fill="#c0c0c0"/>
+            <rect x="3" y="8" width="8" height="4" fill="#ffffff"/>
+          </svg>
+          <span class="tab-title">DEFRAG.EXE</span>
+        </button>
+      </div>
+
+      <!-- Системный трей с часами -->
+      <div class="system-tray">
+        <span class="tray-icon" id="tray-sound" title="Звук Web Audio API">
+          <svg viewBox="0 0 14 14" width="14" height="14">
+            <polygon points="1,4 5,4 9,1 9,13 5,10 1,10" fill="#000080"/>
+            <path d="M 11 4 Q 13 7 11 10" fill="none" stroke="#000080" stroke-width="1.5"/>
+          </svg>
+        </span>
+        <span class="tray-icon" id="tray-clippy" title="Вызов Доктора Скрепки">
+          <svg viewBox="0 0 14 14" width="14" height="14">
+            <ellipse cx="7" cy="8" rx="3.5" ry="5.5" fill="none" stroke="#202020" stroke-width="1.5"/>
+            <circle cx="7" cy="3" r="2" fill="#e8e8e8" stroke="#000" stroke-width="0.8"/>
+          </svg>
+        </span>
+        <span class="tray-clock" id="tray-clock">12:00</span>
+      </div>
+    </div>
+
   </div>
 
-  <script src="engine.js"></script>
+  <script src="./engine.js"></script>
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('./sw.js')
           .then(registration => {
-            console.log('ServiceWorker registration successful with scope: ', registration.scope);
+            console.log('SW registered:', registration.scope);
           }, err => {
-            console.log('ServiceWorker registration failed: ', err);
+            console.warn('SW failed:', err);
           });
       });
     }

@@ -1,0 +1,20 @@
+{
+  "name": "Шизо 95: Клинический синтезатор",
+  "short_name": "Шизо 95",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#008080",
+  "theme_color": "#000080",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
